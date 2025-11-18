@@ -45,12 +45,15 @@ def debug_apify_response(url: str):
     # Run the actor
     run = client.actor("streamers/youtube-scraper").call(run_input=run_input)
 
-    # Fetch and display results
+    # Fetch and display results using list_items (best practice)
     print("=" * 70)
     print("📥 RESULTS:\n")
 
+    dataset_client = client.dataset(run["defaultDatasetId"])
+    dataset_items = dataset_client.list_items(limit=10)
+
     item_count = 0
-    for item in client.dataset(run["defaultDatasetId"]).iterate_items():
+    for item in dataset_items.items:
         item_count += 1
         print(f"--- Item {item_count} ---")
         print(f"Available fields: {list(item.keys())}\n")
