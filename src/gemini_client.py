@@ -22,7 +22,7 @@ class GeminiRAG:
             raise ValueError("Gemini API key is required. Set GEMINI_API_KEY environment variable.")
 
         genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel('gemini-1.5-pro')
+        self.model = genai.GenerativeModel('gemini-2.5-flash')
         self.uploaded_files = []
 
     def upload_file(self, file_path: str, display_name: Optional[str] = None) -> Dict:
