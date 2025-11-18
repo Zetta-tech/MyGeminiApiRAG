@@ -5,11 +5,14 @@ A powerful tool that enables you to chat with YouTube video transcripts using Go
 ## Features
 
 - 🔍 **Scrape YouTube Channels** - Automatically fetch videos from any YouTube channel
+- 🚀 **Batch Processing** - Process multiple channels, playlists, or videos in parallel
+- ⚡ **Async Support** - Lightning-fast parallel scraping using async/await
 - 📝 **Extract Transcripts** - Get video subtitles and transcripts using Apify
 - ☁️ **Gemini File Search** - Upload transcripts to Google's new Gemini file search feature
 - 💬 **Interactive Chat** - Chat with your video transcripts using natural language
 - 🎯 **Newest to Oldest** - Videos are automatically sorted from newest to oldest
 - 📊 **Metadata Storage** - Save video metadata for future reference
+- 📁 **File Input** - Load multiple URLs from a file for bulk processing
 
 ## Prerequisites
 
@@ -43,9 +46,9 @@ A powerful tool that enables you to chat with YouTube video transcripts using Go
 
 ## Usage
 
-### Quick Start
+### Quick Start (Single Channel)
 
-Run the main application:
+Run the main application for a single channel:
 ```bash
 python main.py
 ```
@@ -56,6 +59,39 @@ The application will:
 3. Scrape the channel and extract transcripts
 4. Upload transcripts to Gemini AI
 5. Start an interactive chat interface
+
+### Batch Processing (Multiple URLs)
+
+For processing multiple channels, playlists, or videos in parallel:
+```bash
+python batch_main.py
+```
+
+The batch application supports three input modes:
+1. **Manual Entry** - Enter URLs one by one interactively
+2. **File Input** - Load URLs from a text file
+3. **Single URL** - Process one channel/playlist
+
+**Example: Using a URLs file**
+```bash
+# Create a file with your URLs (one per line)
+cat > my_urls.txt << EOF
+https://www.youtube.com/@Channel1
+https://www.youtube.com/watch?v=VIDEO_ID
+https://www.youtube.com/playlist?list=PLAYLIST_ID
+EOF
+
+# Run batch processing
+python batch_main.py
+# Select option 2 (Load URLs from file)
+# Enter: my_urls.txt
+```
+
+**Benefits of Batch Processing:**
+- ⚡ **Parallel Execution** - All URLs are scraped simultaneously
+- 🚀 **Faster Processing** - Async/await for maximum performance
+- 📊 **Better Organization** - All videos from multiple sources in one chat
+- 🔄 **Reusable Tasks** - Option to create Apify tasks for repeated runs
 
 ### Example Session
 
@@ -108,15 +144,18 @@ While in the chat interface, you can use:
 MyGeminiApiRAG/
 ├── src/
 │   ├── __init__.py
-│   ├── apify_scraper.py      # Apify YouTube scraping logic
+│   ├── apify_scraper.py      # Single URL YouTube scraping
+│   ├── batch_scraper.py      # Batch scraping with async support
 │   ├── gemini_client.py      # Gemini API with file search
 │   ├── video_processor.py    # Video transcript processing
 │   └── chat_interface.py     # Interactive chat interface
 ├── data/
 │   └── transcripts/          # Stored video transcripts
-├── main.py                   # Main application entry point
+├── main.py                   # Single channel application
+├── batch_main.py             # Batch processing application
 ├── requirements.txt          # Python dependencies
 ├── .env.example              # Environment variables template
+├── urls.txt.example          # Example URLs file for batch processing
 └── README.md                 # This file
 ```
 
@@ -125,27 +164,78 @@ MyGeminiApiRAG/
 1. **YouTube Scraping**
    - Uses Apify's `streamers/youtube-scraper` actor
    - Fetches video metadata and English subtitles
+   - **Batch Mode**: Processes multiple URLs in parallel using async/await
+   - **Single Mode**: Processes one channel at a time
    - Sorts videos from newest to oldest
 
 2. **Transcript Processing**
    - Creates individual text files for each video
    - Includes title, URL, description, and full transcript
    - Saves metadata in JSON format
+   - Handles videos without subtitles gracefully
 
 3. **Gemini File Search**
    - Uploads transcript files to Gemini API
    - Uses Google's new file search feature
    - Enables semantic search across all videos
+   - Supports querying multiple video sources simultaneously
 
 4. **Interactive Chat**
    - Natural language interface
    - Queries across all uploaded transcripts
    - Provides context-aware responses
+   - Works seamlessly with single or batch-processed videos
+
+## Advanced Features
+
+### Async Batch Processing
+
+The batch scraper implements Apify's best practices for handling multiple inputs:
+
+**Standard Batch Mode** (Quick & Simple)
+```python
+from src.batch_scraper import scrape_urls_async
+import asyncio
+
+urls = [
+    "https://www.youtube.com/@Channel1",
+    "https://www.youtube.com/watch?v=VIDEO_ID",
+    "https://www.youtube.com/playlist?list=PLAYLIST_ID"
+]
+
+videos = asyncio.run(scrape_urls_async(urls, max_videos_per_source=50))
+```
+
+**Task-Based Mode** (Recommended for Reusable Inputs)
+```python
+# Use this when you plan to scrape the same URLs multiple times
+videos = asyncio.run(scrape_urls_async(urls, max_videos_per_source=50, use_tasks=True))
+```
+
+**Performance Benefits:**
+- All URLs are scraped in parallel using `asyncio.gather()`
+- Significantly faster than sequential processing
+- Efficient resource utilization
+- Automatic error handling for individual URLs
+
+### URL File Format
+
+Create a `urls.txt` file with one URL per line:
+```
+# Comments start with #
+https://www.youtube.com/@TechChannel
+https://www.youtube.com/watch?v=abc123
+https://www.youtube.com/playlist?list=PLxxx
+
+# Mix channels, playlists, and individual videos
+https://www.youtube.com/@AnotherChannel
+```
 
 ## API References
 
 - **Gemini File Search**: [Documentation](https://ai.google.dev/gemini-api/docs/file-search)
 - **Apify API**: [Documentation](https://docs.apify.com)
+- **Apify Async Client**: [Best Practices](https://docs.apify.com/api/client/python/docs/async)
 - **YouTube Scraper Actor**: [Documentation](https://apify.com/streamers/youtube-scraper)
 
 ## Troubleshooting

@@ -1,0 +1,19 @@
+# YouTube URLs File Example
+# One URL per line - supports channels, playlists, and individual videos
+# Lines starting with # are ignored (comments)
+
+# Example YouTube Channel URLs
+# https://www.youtube.com/@ChannelName
+# https://www.youtube.com/c/ChannelName
+# https://www.youtube.com/channel/UCxxxxxxxx
+
+# Example YouTube Playlist URLs
+# https://www.youtube.com/playlist?list=PLxxxxxxxxxx
+
+# Example Individual Video URLs
+# https://www.youtube.com/watch?v=VIDEO_ID_1
+# https://www.youtube.com/watch?v=VIDEO_ID_2
+# https://youtu.be/VIDEO_ID_3
+
+# You can mix different types of URLs
+# The scraper will process all of them in parallel
