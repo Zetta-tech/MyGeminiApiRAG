@@ -34,6 +34,7 @@ def debug_apify_response(url: str):
     run_input = {
         "startUrls": [{"url": url}],
         "maxResults": 1,  # Just get one video for debugging
+        "getSubtitles": True,  # Enable subtitle extraction
         "subtitlesLanguage": "en",
         "subtitlesFormat": "plaintext",
     }

@@ -40,6 +40,7 @@ class YouTubeScraper:
         run_input = {
             "startUrls": [{"url": channel_url}],
             "maxResults": max_videos,
+            "getSubtitles": True,  # Enable subtitle extraction
             "subtitlesLanguage": "en",  # Get English subtitles
             "subtitlesFormat": "plaintext",  # Get plain text format
         }
@@ -94,6 +95,7 @@ class YouTubeScraper:
         run_input = {
             "startUrls": [{"url": video_url}],
             "maxResults": 1,
+            "getSubtitles": True,  # Enable subtitle extraction
             "subtitlesLanguage": "en",
             "subtitlesFormat": "plaintext",
         }

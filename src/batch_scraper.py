@@ -83,6 +83,7 @@ class BatchYouTubeScraper:
         run_input = {
             "startUrls": [{"url": url}],
             "maxResults": max_videos,
+            "getSubtitles": True,  # Enable subtitle extraction
             "subtitlesLanguage": "en",
             "subtitlesFormat": "plaintext",
         }
@@ -154,6 +155,7 @@ class BatchYouTubeScraper:
                     task_input={
                         "startUrls": [{"url": url}],
                         "maxResults": max_videos_per_source,
+                        "getSubtitles": True,  # Enable subtitle extraction
                         "subtitlesLanguage": "en",
                         "subtitlesFormat": "plaintext",
                     },
