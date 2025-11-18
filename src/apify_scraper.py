@@ -48,11 +48,21 @@ class YouTubeScraper:
         print("⏳ Running Apify actor...")
         run = self.client.actor("streamers/youtube-scraper").call(run_input=run_input)
 
-        # Fetch results from the actor's dataset
-        videos = []
+        # Fetch results from the actor's dataset using list_items (best practice)
         print("📥 Fetching results...")
+        dataset_client = self.client.dataset(run["defaultDatasetId"])
+        dataset_items = dataset_client.list_items(limit=max_videos)
 
-        for item in self.client.dataset(run["defaultDatasetId"]).iterate_items():
+        # Process dataset items
+        videos = []
+        for idx, item in enumerate(dataset_items.items):
+            # Debug: Show available fields for first item
+            if idx == 0:
+                print(f"  🔍 Debug - Available fields: {list(item.keys())}")
+                subtitles_value = item.get('subtitles', '')
+                print(f"  🔍 Debug - Subtitles field type: {type(subtitles_value)}, "
+                      f"length: {len(str(subtitles_value)) if subtitles_value else 0}")
+
             video_data = {
                 'id': item.get('id', ''),
                 'title': item.get('title', 'Untitled'),

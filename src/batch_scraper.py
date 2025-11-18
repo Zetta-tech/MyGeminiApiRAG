@@ -91,9 +91,20 @@ class BatchYouTubeScraper:
             # Run the actor and wait for it to finish
             run = await self.client.actor("streamers/youtube-scraper").call(run_input=run_input)
 
-            # Fetch results from the actor's dataset
+            # Fetch results from the actor's dataset using list_items (best practice)
+            dataset_client = self.client.dataset(run["defaultDatasetId"])
+            dataset_items = await dataset_client.list_items(limit=max_videos)
+
+            # Process dataset items
             videos = []
-            async for item in self.client.dataset(run["defaultDatasetId"]).iterate_items():
+            for idx, item in enumerate(dataset_items.items):
+                # Debug: Show available fields for first item
+                if idx == 0:
+                    print(f"    🔍 Debug - Available fields: {list(item.keys())}")
+                    subtitles_value = item.get('subtitles', '')
+                    print(f"    🔍 Debug - Subtitles type: {type(subtitles_value)}, "
+                          f"length: {len(str(subtitles_value)) if subtitles_value else 0}")
+
                 video_data = {
                     'id': item.get('id', ''),
                     'title': item.get('title', 'Untitled'),
@@ -209,9 +220,20 @@ class BatchYouTubeScraper:
         try:
             run = await task_client.call()
 
-            # Fetch videos from dataset
+            # Fetch videos from dataset using list_items (best practice)
+            dataset_client = self.client.dataset(run["defaultDatasetId"])
+            dataset_items = await dataset_client.list_items(limit=1000)
+
+            # Process dataset items
             videos = []
-            async for item in self.client.dataset(run["defaultDatasetId"]).iterate_items():
+            for idx, item in enumerate(dataset_items.items):
+                # Debug: Show available fields for first item
+                if idx == 0:
+                    print(f"    🔍 Debug - Available fields: {list(item.keys())}")
+                    subtitles_value = item.get('subtitles', '')
+                    print(f"    🔍 Debug - Subtitles type: {type(subtitles_value)}, "
+                          f"length: {len(str(subtitles_value)) if subtitles_value else 0}")
+
                 video_data = {
                     'id': item.get('id', ''),
                     'title': item.get('title', 'Untitled'),

@@ -62,9 +62,19 @@ class VideoProcessor:
         for i, video in enumerate(videos, 1):
             print(f"\n[{i}/{len(videos)}] Processing: {video.get('title', 'Untitled')}")
 
+            # Debug: Show subtitle info
+            subtitles = video.get('subtitles')
+            subtitles_length = len(str(subtitles)) if subtitles else 0
+            print(f"  📊 Debug - Subtitles type: {type(subtitles)}, Length: {subtitles_length}")
+
             # Skip videos without subtitles
-            if not video.get('subtitles'):
-                print("⚠️  No subtitles available, skipping...")
+            if not subtitles:
+                print(f"  ⚠️  No subtitles available (value: {repr(subtitles)}), skipping...")
+                continue
+
+            # Additional check for empty string
+            if isinstance(subtitles, str) and not subtitles.strip():
+                print(f"  ⚠️  Subtitles field is empty string, skipping...")
                 continue
 
             try:
