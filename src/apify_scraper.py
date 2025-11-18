@@ -41,7 +41,7 @@ class YouTubeScraper:
             "startUrls": [{"url": channel_url}],
             "maxResults": max_videos,
             "subtitlesLanguage": "en",  # Get English subtitles
-            "subtitlesFormat": "text",  # Get plain text format
+            "subtitlesFormat": "plaintext",  # Get plain text format
         }
 
         # Run the actor and wait for it to finish
@@ -85,7 +85,7 @@ class YouTubeScraper:
             "startUrls": [{"url": video_url}],
             "maxResults": 1,
             "subtitlesLanguage": "en",
-            "subtitlesFormat": "text",
+            "subtitlesFormat": "plaintext",
         }
 
         run = self.client.actor("streamers/youtube-scraper").call(run_input=run_input)
